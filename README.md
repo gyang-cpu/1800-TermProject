@@ -6,7 +6,7 @@ Project Manager: Daniel
 
 Web Designer: Kat
 
-Font-End Developer: Edager
+Font-End Developer: Edgar
 
 Back-End Developer: George
 
