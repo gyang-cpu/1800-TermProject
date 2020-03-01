@@ -1,5 +1,4 @@
 # Team 5
-Team Name: The Lonely Four
 
 ## Team roles:
 
