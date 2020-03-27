@@ -5,8 +5,7 @@ const passportMongoose = require("passport-local-mongoose");
 const uniqueValidator = require('mongoose-unique-validator');
 const crypto = require('crypto');
 
-const jwt = require('jsonwebtoken');
-var secret = require('../config').secret;
+
 
 var UserSchema = new mongoose.Schema({
     username: {type: String, required: [true, "username cannot be blank"]}

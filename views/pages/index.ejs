@@ -44,6 +44,29 @@
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    
+    <script>
+        console.log(`working`)
+        // Geolocation code goes here// 
+        let lat, lon;
+        if ('geolocation' in navigator) {
+            console.log('geolocation available');
+            navigator.geolocation.getCurrentPosition(async position => {
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
+
+            const api_url = `/secret`;
+            const response = await fetch(api_url);
+            const json = await response.json();
+            console.log(json);
+
+            });
+      } else{
+                console.log('geolocation not available')
+    }
+        
+
+    </script>
 </body>
 
 </html>

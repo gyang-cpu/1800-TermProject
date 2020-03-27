@@ -6,9 +6,11 @@ const express = require('express'),
     LocalStrategy = require("passport-local"),
     passportMongoose = require("passport-local-mongoose");
 
+// new package required for API calls to client side// 
+const fetch = require('node-fetch');
+    
 
 const app = express()
-
 
 // Database Mongoose
 // ============================
@@ -35,6 +37,10 @@ app.use(require("express-session")({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+//Geo location ================
+
+
 
 // passport initalization 
 // ======================
@@ -107,4 +113,15 @@ function isLoggedIn(req, res, next){
 
 app.listen(3000, function () {
     console.log("Server has started")
+});
+
+/// ==> API Call t DarkSky
+// ===> the better practice would be to have ${format} for our api-Key in a different module
+//--> need parameters {lat, lon}  ?
+app.get('/', async (request, response) => {
+    const api_url = `//api.darksky.net/forecast/04295c26f975c0c262814a6578aea547/${lat},${long}`
+
+   const fetch_response = await fetch(api_url);
+    const json = await fetch_response.json();
+    response.log(json);
 });
