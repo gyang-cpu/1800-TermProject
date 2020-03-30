@@ -1,25 +1,27 @@
 {
-  "name": "projects1800",
+  "name": "comp-1800",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "Project Manager: Daniel",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edgarcoime/1800-TermProject.git"
+  },
+  "author": "george",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/edgarcoime/1800-TermProject/issues"
+  },
+  "homepage": "https://github.com/edgarcoime/1800-TermProject#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
-    "html5-geolocation": "^2.0.0",
-    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.6",
-    "mongoose-unique-validator": "^2.0.3",
-    "navigator": "^1.0.1",
-    "node-fetch": "^2.6.0",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^6.0.1"

@@ -1,24 +1,58 @@
 const express = require('express'),
     bodyParser = require("body-parser"),
     mongoose = require('mongoose'),
-    User = require("./models/user"),
+    // User = require("./models/user"),
     passport = require("passport"),
     LocalStrategy = require("passport-local"),
     passportMongoose = require("passport-local-mongoose");
 
-// new package required for API calls to client side// 
-const fetch = require('node-fetch');
-    
 
 const app = express()
+
 
 // Database Mongoose
 // ============================
 
-const mongooseUsername = "edgar-admin"
-const mongoosePassword = "test1234"
-mongoose.connect(`mongodb+srv://${mongooseUsername}:${mongoosePassword}@cluster0-sftgr.mongodb.net/todolistDB`,
-    { useNewUrlParser: true, useUnifiedTopology: true })
+// const mongooseUsername = "edgar-admin"
+// const mongoosePassword = "test1234"
+// mongoose.connect(`mongodb+srv://${mongooseUsername}:${mongoosePassword}@cluster0-sftgr.mongodb.net/todolistDB`,
+    // { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect("mongodb://localhost:27017/1800todolist", {useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false})
+
+// MONGOOSE SCHEMAS
+
+const listSchema = new mongoose.Schema({
+    name: String,
+    date: Date,
+    tags: {
+        type: Array,
+        "default": ['tag1', 'tag2']
+    },
+    items: {
+        type: Array,
+        "default": ['item1', 'item2']
+    }
+});
+const List = mongoose.model('List', listSchema);
+
+var userSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+    lists: [listSchema]
+});
+userSchema.plugin(passportMongoose);
+const User = mongoose.model("User", userSchema);
+
+const defaultList1 = new List({
+    name: "Welcome to Memento!",
+    date: Date.now()
+});
+const defaultList2 = new List({
+    name: "This is your first sample List :)",
+    date: Date.now()
+})
+const defaultLists = [defaultList1, defaultList2]
+
 
 app.set("view engine", "ejs")
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -38,10 +72,6 @@ app.use(require("express-session")({
 app.use(passport.initialize());
 app.use(passport.session());
 
-//Geo location ================
-
-
-
 // passport initalization 
 // ======================
 
@@ -52,21 +82,68 @@ passport.deserializeUser(User.deserializeUser());
 
 // ROUTES
 // ===============================
-
-
-app.get("/secret", isLoggedIn, function (req, res) {
-    res.render("secret");
+app.get("/", checkAuthenticated, function (req, res) {
+    // console.log(req.user.lists)
+    res.render("secret", {
+        newListItems: req.user.lists,
+        user: req.user
+    });
+    const newList = new List({
+        name: "Sample List",
+        date: Date.now()
+    });
 });
+
+app.post('/', checkAuthenticated, (req, res) => {
+    console.log(req.body);
+    const newList = {
+        name: req.body.listTitle,
+        date: req.body.listDate
+    }
+    console.log(newList)
+    User.findById(req.body.userId, (err, user) => {
+        if (err) { console.log(err) }
+        else {
+            console.log(user)
+            user.lists.push(newList)
+            user.save()
+        }
+        res.redirect('/');
+    })
+})
+// { $pullAll: { lists: [ _id: req.body.listId ]}}
+// Favorite.updateOne( {cn: req.params.name}, { $pullAll: {uid: [req.params.deleteUid] } } )
+
+app.post('/delete', checkAuthenticated, (req, res) => {
+    User.findOneAndUpdate({ _id: req.user._id },
+        { $pull: { 
+            lists: { _id: req.body.listId } 
+        }
+        }, (err, data) => {
+            if (err) { console.log(err) }
+            else {
+                console.log(data)
+            }
+        })
+    res.redirect('/')
+})
+
+app.get('/lists/:customListName', checkAuthenticated, (req, res) => {
+    console.log(req.params.customListName)
+    console.log(req.body)
+    console.log(req.user)
+})
+
 
 // Login Routes
 // ===============================
 
-app.get("/", function (req, res) {
+app.get("/home", checkNotAuthenticated, function (req, res) {
     res.render("home");
 });
 
-app.post("/login", passport.authenticate("local", {
-    successRedirect: "/secret",
+app.post("/home", passport.authenticate("local", {
+    successRedirect: "/",
     failureRedirect: "/signup"
 }), function (req, res) {
 
@@ -76,21 +153,21 @@ app.post("/login", passport.authenticate("local", {
 // Sign up Route
 // ===============================
 
-app.get("/signup", function (req, res) {
+app.get("/signup", checkNotAuthenticated, function (req, res) {
     res.render("signup")
 })
 
-app.post("/signup", function (req, res) {
-    req.body.username
-    req.body.password
-
-    User.register(new User({ username: req.body.username }), req.body.password, function (err, user) {
+app.post("/signup", checkNotAuthenticated, function (req, res) {
+    User.register(new User({ 
+        username: req.body.username,
+        // lists: defaultLists
+    }), req.body.password, function (err, user) {
         if (err) {
             console.log(err);
             return res.render('signup');
         }
         passport.authenticate('local')(req, res, function () {
-            res.redirect("/secret")
+            res.redirect("/")
         });
     });
 });
@@ -103,25 +180,23 @@ app.get("/logout", function(req, res){
     res.redirect("/")
 });
 
+// === Middleware to prevent user from visiting pages that need login ===
+function checkAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next()
+    } 
+    res.redirect('/home')
+};
 
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
+// === Middleware to prevent user from visiting redundent pages when they are 
+// === already logged in.
+function checkNotAuthenticated(req, res, next)  {
+    if (req.isAuthenticated()) {
+        return res.redirect('/')
     }
-    res.redirect("/")
-}
+    next()
+};
 
 app.listen(3000, function () {
     console.log("Server has started")
-});
-
-/// ==> API Call t DarkSky
-// ===> the better practice would be to have ${format} for our api-Key in a different module
-//--> need parameters {lat, lon}  ?
-app.get('/', async (request, response) => {
-    const api_url = `//api.darksky.net/forecast/04295c26f975c0c262814a6578aea547/${lat},${long}`
-
-   const fetch_response = await fetch(api_url);
-    const json = await fetch_response.json();
-    response.log(json);
 });

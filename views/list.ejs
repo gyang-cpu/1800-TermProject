@@ -7,15 +7,7 @@
                                         <div class="widget-content p-0">
                                             <div class="widget-content-wrapper">
                                                 <div class="widget-content-left mr-2">
-                                                  <form action="/lists/<%= item.name %>" method="GET">
-                                                    <input type="hidden" name="listName" value="<%= item.name %>"></input>
-                                                    <button 
-                                                    class="border-0 btn-transition btn btn-outline-success" 
-                                                    name="listId"
-                                                    value="<%= item._id %>">
-                                                        <i class="fa fa-umbrella"></i>
-                                                    </button>   
-                                                </form>
+                                                    <div class="custom-checkbox custom-control"> <input class="custom-control-input" id="exampleCustomCheckbox12" type="checkbox"><label class="custom-control-label" for="exampleCustomCheckbox12">&nbsp;</label> </div>
                                                 </div>
                                                 <div class="widget-content-left">
 
@@ -24,11 +16,29 @@
                                                         <%= item.name %> 
                                                     </div>
 
+                                                    <!--Calendar entry goes here-->
+                                                    <small>
+                                                        <%= item.date %> 
+                                                    </small>
+
+                                                    <!--Details go here-->
+                                                    <div class="widget-subheading">
+                                                        <i>Made by <%= user.username %></i>
+                                                    </div>
 
                                                     <!--TAGS can be attached here-->
 
                                                 </div>
                                                 <div class="widget-content-right"> 
+                                                    <form action="/umbrella" method="POST">
+                                                        <input type="hidden" name="listName" value="<%= item.name %>"></input>
+                                                        <button 
+                                                        class="border-0 btn-transition btn btn-outline-success" 
+                                                        name="listId"
+                                                        value="<%= item._id %>">
+                                                            <i class="fa fa-umbrella"></i></i>
+                                                        </button>   
+                                                    </form>
                                                     
                                                     <form action="/delete" method="POST">
                                                         <input type="hidden" name="listName" value="<%= item.name %>"></input>
@@ -135,6 +145,7 @@
                   </div>
                 
                 </form>
+
 
 
 <%- include("partials/user-page-footer") -%>
