@@ -13,13 +13,34 @@ const app = express()
 // Database Mongoose
 // ============================
 
-// const mongooseUsername = "edgar-admin"
-// const mongoosePassword = "test1234"
-// mongoose.connect(`mongodb+srv://${mongooseUsername}:${mongoosePassword}@cluster0-sftgr.mongodb.net/todolistDB`,
-    // { useNewUrlParser: true, useUnifiedTopology: true })
-mongoose.connect("mongodb://localhost:27017/1800todolist", {useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false})
+const mongooseUsername = "edgar-admin"
+const mongoosePassword = "test1234"
+mongoose.connect(`mongodb+srv://${mongooseUsername}:${mongoosePassword}@cluster0-sftgr.mongodb.net/todolistDB`,
+    { useNewUrlParser: true, useUnifiedTopology: true })
+// mongoose.connect("mongodb://localhost:27017/1800todolist", 
+// {useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false})
 
 // MONGOOSE SCHEMAS
+
+const listItemSchema = new mongoose.Schema({
+    name: String,
+    date: Date,
+    details: String
+})
+const ListItem = mongoose.model('ListItem', listItemSchema)
+
+// Default items in list
+const defaultItem1 = new ListItem({
+    name: "Welcome to Memento!",
+    date: Date.now(),
+    details: "Feel free to delete me"
+})
+
+const defaultItem2 = new ListItem({
+    name: "These are the default items",
+    date: Date.now(),
+    details: "Feel free to delete me"
+})
 
 const listSchema = new mongoose.Schema({
     name: String,
@@ -30,7 +51,7 @@ const listSchema = new mongoose.Schema({
     },
     items: {
         type: Array,
-        "default": ['item1', 'item2']
+        "default": [defaultItem1, defaultItem2]
     }
 });
 const List = mongoose.model('List', listSchema);
@@ -56,7 +77,7 @@ const defaultLists = [defaultList1, defaultList2]
 
 app.set("view engine", "ejs")
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/public"));
 
 
 // Sessions
@@ -80,18 +101,18 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-// ROUTES
+// AUTHENTICATED ROUTES ROUTES
 // ===============================
+
+
+// List of Reminder LISTS ================================================
 app.get("/", checkAuthenticated, function (req, res) {
-    // console.log(req.user.lists)
+    console.log(req.user.lists)
     res.render("secret", {
         newListItems: req.user.lists,
         user: req.user
     });
-    const newList = new List({
-        name: "Sample List",
-        date: Date.now()
-    });
+    // res.render('reminders')
 });
 
 app.post('/', checkAuthenticated, (req, res) => {
@@ -111,8 +132,6 @@ app.post('/', checkAuthenticated, (req, res) => {
         res.redirect('/');
     })
 })
-// { $pullAll: { lists: [ _id: req.body.listId ]}}
-// Favorite.updateOne( {cn: req.params.name}, { $pullAll: {uid: [req.params.deleteUid] } } )
 
 app.post('/delete', checkAuthenticated, (req, res) => {
     User.findOneAndUpdate({ _id: req.user._id },
@@ -128,11 +147,28 @@ app.post('/delete', checkAuthenticated, (req, res) => {
     res.redirect('/')
 })
 
-app.get('/lists/:customListName', checkAuthenticated, (req, res) => {
-    console.log(req.params.customListName)
-    console.log(req.body)
-    console.log(req.user)
+
+// Reminder List ==================================================================================
+
+app.get('/lists/:customListName/:listId', checkAuthenticated, (req, res) => {
+    const allUserLists = req.user.lists
+    const customListName = req.params.customListName
+    const listId = req.params.listId
+    const currentList = allUserLists.find(element => element._id == listId)
+
+    res.render("list", {
+        listName: customListName,
+        newListItems: currentList.items,
+        user: req.user
+    });
+
+    // res.render('reminders')
 })
+
+
+
+
+
 
 
 // Login Routes
@@ -197,6 +233,11 @@ function checkNotAuthenticated(req, res, next)  {
     next()
 };
 
-app.listen(3000, function () {
-    console.log("Server has started")
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+
+app.listen(port, function() {
+  console.log("Server started");
 });
