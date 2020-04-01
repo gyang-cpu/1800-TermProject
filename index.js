@@ -22,57 +22,56 @@ mongoose.connect("mongodb://localhost:27017/1800todolist",
 
 // MONGOOSE SCHEMAS
 
-const listItemSchema = new mongoose.Schema({
-    name: String,
-    date: Date,
-    details: String
-})
-const ListItem = mongoose.model('ListItem', listItemSchema)
+const weatherSchema = new mongoose.Schema({
+    country         : String,
+    city            : String,
+    temp            : Number,
+    precip          : Number,
+    wind            : Number,
+    direction       : Number
+});
 
-// Default items in list
-const defaultItem1 = new ListItem({
-    name: "Welcome to Memento!",
-    date: Date.now(),
-    details: "Feel free to delete me"
-})
-
-const defaultItem2 = new ListItem({
-    name: "These are the default items",
-    date: Date.now(),
-    details: "Feel free to delete me"
-})
-
-const listSchema = new mongoose.Schema({
-    name: String,
-    date: Date,
-    tags: {
-        type: Array,
-        "default": ['tag1', 'tag2']
-    },
-    items: {
-        type: Array,
-        "default": [defaultItem1, defaultItem2]
+const listReminderSchema = new mongoose.Schema({
+    title           : String,
+    date            : Date,
+    details         : String,
+    weather         : {
+        type        : weatherSchema,
+        "default"   : {
+            country : "Richmond",
+            temp    : 45
+        }
     }
 });
-const List = mongoose.model('List', listSchema);
 
-var userSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    lists: [listSchema]
+const listSchema = new mongoose.Schema({
+    title           : String,
+    tags            : {
+        type        : Array,
+        "default"   : ["tag1", "tag2"]
+    },
+    items           : {
+        type        : [listReminderSchema],
+        "default"   : [{
+            title   : "First Reminder!",
+            date    : Date.now()
+        }]
+
+    }
+});
+
+const userSchema = new mongoose.Schema({
+    username        : String,
+    password        : String,
+    lists           : {
+        type        : [listSchema],
+        "default"   : [{
+            title   : "This page is where your lists will be"
+        }]
+    }
 });
 userSchema.plugin(passportMongoose);
 const User = mongoose.model("User", userSchema);
-
-const defaultList1 = new List({
-    name: "Welcome to Memento!",
-    date: Date.now()
-});
-const defaultList2 = new List({
-    name: "This is your first sample List :)",
-    date: Date.now()
-})
-const defaultLists = [defaultList1, defaultList2]
 
 
 app.set("view engine", "ejs")
@@ -107,7 +106,7 @@ passport.deserializeUser(User.deserializeUser());
 
 // List of Reminder LISTS ================================================
 app.get("/", checkAuthenticated, function (req, res) {
-    console.log(req.user.lists)
+    // console.log(req.user.lists)
     res.render("secret", {
         newListItems: req.user.lists,
         user: req.user
@@ -118,16 +117,14 @@ app.get("/", checkAuthenticated, function (req, res) {
 app.post('/', checkAuthenticated, (req, res) => {
     // console.log(req.body);
     console.log(req.body.longitude)
-    let longitude = req.body.longitude
     const newList = {
-        name: req.body.listTitle,
+        title: req.body.listTitle,
         date: req.body.listDate
     }
-    // console.log(newList)
+    // calling the user document and appending new list item and saving it to DB
     User.findById(req.body.userId, (err, user) => {
         if (err) { console.log(err) }
         else {
-            // console.log(user)
             user.lists.push(newList)
             user.save()
         }
@@ -153,8 +150,9 @@ app.post('/delete', checkAuthenticated, (req, res) => {
 // Reminder List ==================================================================================
 
 app.get('/lists/:customListName/:listId', checkAuthenticated, (req, res) => {
-    console.log(req.user)
-    console.log(req.body);
+    // console.log(req.user)
+    // console.log(req.body);
+    console.log(req.params)
     const allUserLists = req.user.lists
     const customListName = req.params.customListName
     const listId = req.params.listId
@@ -175,24 +173,20 @@ app.post('/deleteReminder', checkAuthenticated, (req, res) => {
     if (!req.user) {
         console.log("User not there")
     }
-    // const allUserLists = req.user.lists
     const listName = req.body.listName
     const listId = req.body.currentListId
     const reminderId = req.body.reminderId
-    const reminderName = req.body.reminderName
 
-    console.log(reminderId);
-    User.findOneAndUpdate(
-        { _id: req.user._id },
-        { $pull: { "lists.$.items": { _id: reminderId }}}, (err, obj) => {
-            if (err) { console.log(err) }
-            // else { console.log(obj) }
+    User.findById(req.user._id, (err, obj) => {
+        if (err) { console.log(err) }
+        else {
+            obj.lists.id(listId).items.id(reminderId).remove();
+            obj.save(err => {
+                if (err) { console.log(err); }
+            })
         }
-    )
+    })
     res.redirect(`/lists/${listName}/${listId}`)
-
-
-
 })
 
 app.post('/umbrellaReminder', checkAuthenticated, (req, res) => {
