@@ -116,12 +116,14 @@ app.get("/", checkAuthenticated, function (req, res) {
 });
 
 app.post('/', checkAuthenticated, (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
+    console.log(req.body.longitude)
+    let longitude = req.body.longitude
     const newList = {
         name: req.body.listTitle,
         date: req.body.listDate
     }
-    console.log(newList)
+    // console.log(newList)
     User.findById(req.body.userId, (err, user) => {
         if (err) { console.log(err) }
         else {
@@ -212,9 +214,10 @@ app.post('/editReminder', checkAuthenticated, (req, res) => {
 app.post('/addReminder', checkAuthenticated, (req, res) => {
 
     console.log(req.body)
-    if (!req.user) {
-        console.log("User not there")
-    }
+    // console.log(req.body)
+    // if (!req.user) {
+    //     console.log("User not there")
+    // }
 })
 
 
