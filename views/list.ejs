@@ -1,4 +1,19 @@
-<%- include("partials/user-page-header") -%>
+
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>memento</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/user-page.css">
+    
+    <script src="https://use.fontawesome.com/41dd587675.js"></script>
+  </head>
+<body>
 
 <nav class="navbar navbar-expand-md navbar-light sticky-top">
   
@@ -72,11 +87,12 @@
                                                     </form>
                                                     
                                                     <form action="/deleteReminder" method="POST">
-                                                        <input type="hidden" name="listName" value="<%= item.name %>"></input>
-                                                        <input type="hidden" name="userId" value="<%= user._id %>"></input>
+                                                        <input type="hidden" name="listName" value="<%= listName %>"></input>
+                                                        <input type="hidden" name="reminderName" value="<%= item.name %>"></input>
+                                                        <input type="hidden" name="currentListId" value="<%= listId %>"></input>
                                                         <button 
                                                         class="border-0 btn-transition btn btn-outline-danger"
-                                                        name="listId"
+                                                        name="reminderId"
                                                         value="<%= item._id %>"> 
                                                             <i class="fa fa-trash"></i> 
                                                         </button> 

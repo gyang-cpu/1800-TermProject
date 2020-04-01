@@ -15,10 +15,10 @@ const app = express()
 
 const mongooseUsername = "edgar-admin"
 const mongoosePassword = "test1234"
-mongoose.connect(`mongodb+srv://${mongooseUsername}:${mongoosePassword}@cluster0-sftgr.mongodb.net/todolistDB`,
-    { useNewUrlParser: true, useUnifiedTopology: true })
-// mongoose.connect("mongodb://localhost:27017/1800todolist", 
-// {useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false})
+// mongoose.connect(`mongodb+srv://${mongooseUsername}:${mongoosePassword}@cluster0-sftgr.mongodb.net/todolistDB`,
+    // { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect("mongodb://localhost:27017/1800todolist", 
+{useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false})
 
 // MONGOOSE SCHEMAS
 
@@ -125,7 +125,7 @@ app.post('/', checkAuthenticated, (req, res) => {
     User.findById(req.body.userId, (err, user) => {
         if (err) { console.log(err) }
         else {
-            console.log(user)
+            // console.log(user)
             user.lists.push(newList)
             user.save()
         }
@@ -151,18 +151,70 @@ app.post('/delete', checkAuthenticated, (req, res) => {
 // Reminder List ==================================================================================
 
 app.get('/lists/:customListName/:listId', checkAuthenticated, (req, res) => {
+    console.log(req.user)
+    console.log(req.body);
     const allUserLists = req.user.lists
     const customListName = req.params.customListName
     const listId = req.params.listId
-    const currentList = allUserLists.find(element => element._id == listId)
 
+    // Is there a better way to store list Id than putting it in params?
+    const currentList = allUserLists.find(element => element._id == listId)
+    
     res.render("list", {
         listName: customListName,
         newListItems: currentList.items,
-        user: req.user
+        user: req.user,
+        listId: listId
     });
+})
 
-    // res.render('reminders')
+app.post('/deleteReminder', checkAuthenticated, (req, res) => {
+    // console.log(req.body)
+    if (!req.user) {
+        console.log("User not there")
+    }
+    // const allUserLists = req.user.lists
+    const listName = req.body.listName
+    const listId = req.body.currentListId
+    const reminderId = req.body.reminderId
+    const reminderName = req.body.reminderName
+
+    console.log(reminderId);
+    User.findOneAndUpdate(
+        { _id: req.user._id },
+        { $pull: { "lists.$.items": { _id: reminderId }}}, (err, obj) => {
+            if (err) { console.log(err) }
+            // else { console.log(obj) }
+        }
+    )
+    res.redirect(`/lists/${listName}/${listId}`)
+
+
+
+})
+
+app.post('/umbrellaReminder', checkAuthenticated, (req, res) => {
+
+    console.log(req.body)
+    if (!req.user) {
+        console.log("User not there")
+    }
+})
+
+app.post('/editReminder', checkAuthenticated, (req, res) => {
+
+    console.log(req.body)
+    if (!req.user) {
+        console.log("User not there")
+    }
+})
+
+app.post('/addReminder', checkAuthenticated, (req, res) => {
+
+    console.log(req.body)
+    if (!req.user) {
+        console.log("User not there")
+    }
 })
 
 
@@ -241,3 +293,28 @@ if (port == null || port == "") {
 app.listen(port, function() {
   console.log("Server started");
 });
+
+
+
+
+
+
+    // User.findById(req.user._id, (err, user) => {
+    //     if (err) { console.log(err) }
+    //     else {
+    //         user.lists.findOneAndUpdate(
+    //             { _id: req.body.currentListId },
+    //             { $pull: {
+    //                 items: { _id: req.body.reminderId}
+    //             }}, (err, data) => {
+    //                 if (err) { console.log(err) }
+    //                 else { console.log(data) }
+    //             }
+    //         )
+    //     }
+    // })
+    
+    // const currentList = allUserLists.find(element => element._id == listId)
+    // console.log(currentList)
+    // const toDeleteReminder = currentList.items.find(element => element._id == reminderId)
+    // console.log(toDeleteReminder)
