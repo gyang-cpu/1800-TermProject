@@ -206,12 +206,27 @@ app.post('/editReminder', checkAuthenticated, (req, res) => {
 })
 
 app.post('/addReminder', checkAuthenticated, (req, res) => {
+    let listName = req.body.listName;
+    let listId = req.body.listId;   
+    let reminderTitle = req.body.reminderTitle;
+    let reminderDate = req.body.reminderDate;
+    let reminderDetails = req.body.reminderDetails;
 
+    User.findById(req.user._id, (err, obj) => {
+        if (err) { console.log(err); }
+        else {
+            obj.lists.id(listId).items.push({
+                title   : reminderTitle,
+                date    : reminderDate,
+                details : reminderDetails
+            })
+            obj.save(err => {
+                if (err) { console.log(err); }
+            })
+        }
+    })
+    res.redirect(`/lists/${listName}/${listId}`)
     console.log(req.body)
-    // console.log(req.body)
-    // if (!req.user) {
-    //     console.log("User not there")
-    // }
 })
 
 

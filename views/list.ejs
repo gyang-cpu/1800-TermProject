@@ -159,15 +159,16 @@
                     <div class="form-group">
                       <!-- Reminder Header -->
                       <label for="recipient-name" class="col-form-label">Title:</label>
+                      <input type="hidden" name="listName" value="<%= listName %>"></input>
                       <input type="hidden" name="listId" value="<%= listId %>"></input>
-                      <input type="text" class="form-control" id="recipient-name" name="listTitle">
+                      <input type="text" class="form-control" id="recipient-name" name="reminderTitle">
                     </div>
                     <!--Reminder Date-->
                     <div class="form-group">
                       <div class="grid">
                       <div class="col-1-4 col-1-4-sm">
                         <div class="controls">
-                          <input type="date" id="arrive" class="floatLabel" name="listDate" value="<?php echo date('Y-m-d'); ?>">
+                          <input type="date" id="arrive" class="floatLabel" name="reminderDate" value="<?php echo date('Y-m-d'); ?>">
                           <label for="arrive" class="label-date"><i class="fa fa-calendar"></i>&nbsp;&nbsp;Date</label>
                         </div>      
                       </div>
@@ -175,7 +176,7 @@
                         <!--Reminder Details-->
                     <div class="form-group">
                       <label for="message-text" class="col-form-label">Details:</label>
-                      <textarea class="form-control" id="message-text" name="listDetails"></textarea>
+                      <textarea class="form-control" id="message-text" name="reminderDetails"></textarea>
                     </div>
                   </div>
 
