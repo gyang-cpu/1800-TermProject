@@ -5,6 +5,8 @@ Open terminal and type ## npm install ## and press enter
 username: asdf
 password: 123123
 
+API Key for Darksky  = s04295c26f975c0c262814a6578aea547
+
 
 Things to Test:
 
