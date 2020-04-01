@@ -65,3 +65,7 @@ body{
 svg{
   width: 60px;
 }
+
+.row {
+  margin-top: 0.5% !important;
+}

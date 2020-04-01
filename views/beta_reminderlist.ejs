@@ -1,0 +1,182 @@
+<%- include("partials/user-page-header") -%>
+
+<nav class="navbar navbar-expand-md navbar-light sticky-top">
+  
+  <svg width="93" height="79" viewBox="0 0 93 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M61.6123 42.6768H50.06C47.9421 42.6768 46.2092 44.1541 46.2092 45.9596V55.8081C46.2092 57.6137 47.9421 59.091 50.06 59.091H61.6123C63.7302 59.091 65.4631 57.6137 65.4631 55.8081V45.9596C65.4631 44.1541 63.7302 42.6768 61.6123 42.6768ZM61.6123 9.8485V13.1313H30.8062V9.8485C30.8062 8.04294 29.0733 6.56567 26.9554 6.56567C24.8375 6.56567 23.1046 8.04294 23.1046 9.8485V13.1313H19.2538C14.9795 13.1313 11.5908 16.0859 11.5908 19.697L11.5523 65.6566C11.5523 69.2678 14.9795 72.2223 19.2538 72.2223H73.1646C77.4005 72.2223 80.8662 69.2678 80.8662 65.6566V19.697C80.8662 16.0859 77.4005 13.1313 73.1646 13.1313H69.3139V9.8485C69.3139 8.04294 67.581 6.56567 65.4631 6.56567C63.3452 6.56567 61.6123 8.04294 61.6123 9.8485ZM69.3139 65.6566H23.1046C20.9867 65.6566 19.2538 64.1794 19.2538 62.3738V29.5455H73.1646V62.3738C73.1646 64.1794 71.4318 65.6566 69.3139 65.6566Z" fill="#499491"/>
+      </svg><h1 id="headerLogo" class="font-weight-gl"><a href="/" style="text-decoration: none;">Home</a></h1>  
+</nav>
+
+<div class="row d-flex justify-content-center container">
+  <div class="col-md-8">
+      <div class="card-hover-shadow-2x mb-3 card">
+          <div class="card-header-tab card-header">
+              <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                <i class="fa fa-tasks"></i>&nbsp;
+                <%= user.username %>: <%= listName %> 
+              </div>
+          </div>
+          <div class="scroll-area-sm">
+              <perfect-scrollbar class="ps-show-limits">
+                  <div style="position: static;" class="ps ps--active-y">
+                      <div class="ps-content">
+                          <ul class=" list-group list-group-flush">
+
+                                    <% newListItems.forEach(item => { %> 
+                                    <li class="list-group-item">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left mr-2">
+                                                  <form action="/editReminder" method="POST">
+                                                    
+                                                    <input type="hidden" name="listName" value="<%= item.name %>"></input>
+                                                    <button 
+                                                    type="submit" 
+                                                    class="btn btn-info btn-sm"
+                                                    name="listId"
+                                                    value="<%= item._id %>">
+                                                    Edit
+                                                    </button>
+
+                                                  </form>
+                                                </div>
+                                                <div class="widget-content-left">
+
+                                                    <!-- TITLE goes here -->
+                                                    <div class="widget-heading">
+                                                        <%= item.name %> 
+                                                    </div>
+
+                                                    <!--Calendar entry goes here-->
+                                                    <small>
+                                                        <%= item.date %> 
+                                                    </small>
+
+                                                    <!--Details go here-->
+                                                    <div class="widget-subheading">
+                                                        <i><%= item.details %></i>
+                                                    </div>
+
+                                                    <!--TAGS can be attached here-->
+
+                                                </div>
+                                                <div class="widget-content-right"> 
+                                                    <form action="/umbrellaReminder" method="POST">
+                                                        <input type="hidden" name="listName" value="<%= item.name %>"></input>
+                                                        <button 
+                                                        class="border-0 btn-transition btn btn-outline-success" 
+                                                        name="listId"
+                                                        value="<%= item._id %>">
+                                                            <i class="fa fa-umbrella"></i></i>
+                                                        </button>   
+                                                    </form>
+                                                    
+                                                    <form action="/deleteReminder" method="POST">
+                                                        <input type="hidden" name="listName" value="<%= item.name %>"></input>
+                                                        <input type="hidden" name="userId" value="<%= user._id %>"></input>
+                                                        <button 
+                                                        class="border-0 btn-transition btn btn-outline-danger"
+                                                        name="listId"
+                                                        value="<%= item._id %>"> 
+                                                            <i class="fa fa-trash"></i> 
+                                                        </button> 
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <% }) %> 
+
+
+
+
+
+
+                                </ul>
+                            </div>
+                        </div>
+                    </perfect-scrollbar>
+                </div>
+                <div class="d-block text-right card-footer">
+                  <!-- MY PASTE STARTS HERE -->
+            <button
+            type="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#exampleModal"
+          >
+            Add a Reminder
+          </button>
+
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">
+                    New Reminder
+                  </h5>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+
+
+
+
+                <form action="/addReminder" method="POST">
+
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <!-- Reminder Header -->
+                      <label for="recipient-name" class="col-form-label">Title:</label>
+                      <input type="hidden" name="userId" value="<%= user._id %>"></input>
+                      <input type="text" class="form-control" id="recipient-name" name="listTitle">
+                    </div>
+                    <!--Reminder Date-->
+                    <div class="form-group">
+                      <div class="grid">
+                      <div class="col-1-4 col-1-4-sm">
+                        <div class="controls">
+                          <input type="date" id="arrive" class="floatLabel" name="listDate" value="<?php echo date('Y-m-d'); ?>">
+                          <label for="arrive" class="label-date"><i class="fa fa-calendar"></i>&nbsp;&nbsp;Date</label>
+                        </div>      
+                      </div>
+                        </div>
+                        <!--Reminder Details-->
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label">Details:</label>
+                      <textarea class="form-control" id="message-text" name="listDetails"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                      Save changes
+                    </button>
+                  </div>
+                
+                </form>
+
+
+
+<%- include("partials/user-page-footer") -%>
