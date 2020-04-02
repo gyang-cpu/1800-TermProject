@@ -76,7 +76,7 @@
 
                                                 </div>
                                                 <div class="widget-content-right"> 
-                                                    <form action="/umbrellaReminder" method="POST">
+                                                    <!-- <form action="/umbrellaReminder" method="POST">
                                                         <input type="hidden" name="currentListId" value="<%= listId %>"></input>
                                                         <input type="hidden" name="reminderName" value="<%= item.name %>"></input>
                                                         <button 
@@ -85,7 +85,13 @@
                                                         value="<%= item._id %>">
                                                             <i class="fa fa-umbrella"></i></i>
                                                         </button>   
-                                                    </form>
+                                                    </form> -->
+                                                      <button  
+                                                      data-toggle="modal" 
+                                                      data-target="#weather-modal" 
+                                                      class="border-0 btn-transition btn btn-outline-success">
+                                                          <i class="fa fa-umbrella"></i></i>
+                                                      </button> 
                                                     
                                                     <form action="/deleteReminder" method="POST">
                                                         <input type="hidden" name="listName" value="<%= listName %>"></input>
@@ -116,14 +122,95 @@
                 </div>
                 <div class="d-block text-right card-footer">
                   <!-- MY PASTE STARTS HERE -->
-            <button
-            type="button"
-            class="btn btn-primary"
-            data-toggle="modal"
-            data-target="#exampleModal"
-          >
-            Add a Reminder
-          </button>
+          <form action="/export" method="POST" style="display: inline-block;">
+            <input type="hidden" name="listId" value="<%= listId %>"></input>
+            <button id ="export-button" type="submit" class="btn btn-primary">
+            Export
+            </button>            
+          </form>
+          <button
+           class="btn btn-primary"
+           data-toggle="modal"
+           data-target="#exampleModal"
+         >
+           Add a Reminder
+         </button>
+          
+
+
+        <!-- MODAL FOR API -->
+        <div class="modal fade" id="weather-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Weather</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <div class="container-fluid">
+                  <div id="WeatherBoard">
+                      <div class="row">
+                      <table width="100%"><tr>
+                          <td>
+                          <i class="fa fa-map-marker fa-2x"></i>
+                          <!--COUNTRY API-->
+                          <span id="countryName">Canada</span>
+                          </td>
+                          </tr>
+                      </table>
+                      </div>
+                      <!---CITY API-->
+                      <span id="cityName">Richmond</span>
+                      
+                      <table width="100%">
+                      <tr>
+                          <td id="temperatureCell">
+                          <!--TEMP API-->
+                          <span id="temperature">15.0 </span><span id="temperatureUnit"><sup>o</sup>C</span>
+                          </td>
+                          <td>
+                          <table>
+                              <tr height="30px">
+                              <td width="50px" style="text-align:center"><i class="fa fa-tint fa-2x"></i></td>
+                              <!--HUMIDTY API-->
+                              <td><span id="humidity">100%</span></td>
+                              </tr>
+                              <tr height="30px">
+                              <td style="text-align:center"><i class="fa fa-wifi fa-1g fa-rotate-90"></i></td>
+                              <!--WIND SPEED API-->
+
+                              <td><span id="windSpeed">35km/h</span></td>
+                              </tr>
+                              <tr height="32px">
+                              <td style="text-align:center"><i class="fa fa-compass fa-2x"></i></td>
+                              <!--WIND DIRECTION API-->
+                              <td><span id="windDirection">55</span><sup>o</sup></td>
+                              </tr>            
+                          </table>
+                          </td>
+                      </tr>
+                      </table>
+                  
+                      <br>
+                  </div>
+                  <div id="errorMessage"></div>
+                  </div>
+                  
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+              </div>
+              </div>
+          </div>
+      </div>
+
+
+
+
+
 
           <!-- Modal -->
           <div
@@ -161,6 +248,8 @@
                       <label for="recipient-name" class="col-form-label">Title:</label>
                       <input type="hidden" name="listName" value="<%= listName %>"></input>
                       <input type="hidden" name="listId" value="<%= listId %>"></input>
+                      <input id="coordinateLongitude" type="hidden" name="longitude" value=""></input>
+                      <input id="coordinateLatitude" type="hidden" name="latitude" value=""></input>
                       <input type="text" class="form-control" id="recipient-name" name="reminderTitle">
                     </div>
                     <!--Reminder Date-->
@@ -194,6 +283,41 @@
                   </div>
                 
                 </form>
+
+                <script>
+                  // do geolocation stuff
+                  // var geoloc = getGeo();
+                  // dom select that input
+                  // input.value = JSON.stringify(geoloc); JSON.parse(req.body.location)
+
+                  
+                self.onload = getLocation(); 
+
+                var x = document.getElementById("test");
+                coords = []
+
+                function getLocation() {
+                  if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                  } else { 
+                    x.innerHTML = "Geolocation is not supported by this browser.";
+                  }
+                }
+
+                function showPosition(position) {
+                  console.log("Latitude: " + position.coords.latitude + 
+                  "<br>Longitude: " + position.coords.longitude);
+                  coords.push(position.coords.latitude, position.coords.longitude);
+                  console.log('my array coords are: ' + coords);
+                  console.log(position.coords)
+                  document.querySelector("#coordinateLongitude").value = position.coords.longitude;
+                  document.querySelector("#coordinateLatitude").value = position.coords.latitude;
+
+                  // document.querySelector("#location").value = JSON.stringify(position.coords);
+                  
+                  return (position.coords.latitude, position.coords.longitude);
+                }
+                </script>
 
 
 

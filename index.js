@@ -139,9 +139,6 @@ app.post('/delete', checkAuthenticated, (req, res) => {
         }
         }, (err, data) => {
             if (err) { console.log(err) }
-            else {
-                console.log(data)
-            }
         })
     res.redirect('/')
 })
@@ -150,9 +147,8 @@ app.post('/delete', checkAuthenticated, (req, res) => {
 // Reminder List ==================================================================================
 
 app.get('/lists/:customListName/:listId', checkAuthenticated, (req, res) => {
-    // console.log(req.user)
-    // console.log(req.body);
     console.log(req.params)
+    console.log(req.body)
     const allUserLists = req.user.lists
     const customListName = req.params.customListName
     const listId = req.params.listId
@@ -180,6 +176,7 @@ app.post('/deleteReminder', checkAuthenticated, (req, res) => {
     User.findById(req.user._id, (err, obj) => {
         if (err) { console.log(err) }
         else {
+            console.log(obj.lists.id(listId))
             obj.lists.id(listId).items.id(reminderId).remove();
             obj.save(err => {
                 if (err) { console.log(err); }
@@ -206,6 +203,7 @@ app.post('/editReminder', checkAuthenticated, (req, res) => {
 })
 
 app.post('/addReminder', checkAuthenticated, (req, res) => {
+    console.log(req.body)
     let listName = req.body.listName;
     let listId = req.body.listId;   
     let reminderTitle = req.body.reminderTitle;
@@ -229,6 +227,22 @@ app.post('/addReminder', checkAuthenticated, (req, res) => {
     console.log(req.body)
 })
 
+app.post('/export', checkAuthenticated, (req, res) => {
+    // console.log(req.body)
+    // console.log(req.user._id)
+    let listId = req.body.listId
+    User.findById(req.user._id, (err, obj) => {
+        if (err) { console.log(err); }
+        else {
+            console.log(obj.lists.id(listId))
+        }
+    })
+})
+
+
+app.get('/beta', (req, res) => {
+    res.render("beta-list")
+})
 
 
 
@@ -305,28 +319,3 @@ if (port == null || port == "") {
 app.listen(port, function() {
   console.log("Server started");
 });
-
-
-
-
-
-
-    // User.findById(req.user._id, (err, user) => {
-    //     if (err) { console.log(err) }
-    //     else {
-    //         user.lists.findOneAndUpdate(
-    //             { _id: req.body.currentListId },
-    //             { $pull: {
-    //                 items: { _id: req.body.reminderId}
-    //             }}, (err, data) => {
-    //                 if (err) { console.log(err) }
-    //                 else { console.log(data) }
-    //             }
-    //         )
-    //     }
-    // })
-    
-    // const currentList = allUserLists.find(element => element._id == listId)
-    // console.log(currentList)
-    // const toDeleteReminder = currentList.items.find(element => element._id == reminderId)
-    // console.log(toDeleteReminder)
