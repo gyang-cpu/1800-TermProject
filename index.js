@@ -4,7 +4,8 @@ const express = require('express'),
     // User = require("./models/user"),
     passport = require("passport"),
     LocalStrategy = require("passport-local"),
-    passportMongoose = require("passport-local-mongoose");
+    passportMongoose = require("passport-local-mongoose"),
+    axios = require('axios').default;
 
 
 const app = express()
@@ -15,10 +16,10 @@ const app = express()
 
 const mongooseUsername = "edgar-admin"
 const mongoosePassword = "test1234"
-// mongoose.connect(`mongodb+srv://${mongooseUsername}:${mongoosePassword}@cluster0-sftgr.mongodb.net/todolistDB`,
-    // { useNewUrlParser: true, useUnifiedTopology: true })
-mongoose.connect("mongodb://localhost:27017/1800todolist", 
-{useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false})
+mongoose.connect(`mongodb+srv://${mongooseUsername}:${mongoosePassword}@cluster0-sftgr.mongodb.net/todolistDB`,
+    { useNewUrlParser: true, useUnifiedTopology: true })
+// mongoose.connect("mongodb://localhost:27017/1800todolist", 
+// {useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false})
 
 // MONGOOSE SCHEMAS
 
@@ -28,9 +29,9 @@ const weatherSchema = new mongoose.Schema({
     temp            : Number,
     precip          : Number,
     wind            : Number,
-    direction       : Number
+    direction       : Number,
+    rain            : Boolean
 });
-
 const listReminderSchema = new mongoose.Schema({
     title           : String,
     date            : Date,
@@ -209,6 +210,22 @@ app.post('/addReminder', checkAuthenticated, (req, res) => {
     let reminderTitle = req.body.reminderTitle;
     let reminderDate = req.body.reminderDate;
     let reminderDetails = req.body.reminderDetails;
+    // const test_api_rul = `https://api.darksky.net/forecast/04295c26f975c0c262814a6578aea547/37.8267,-122.4233`
+    
+    
+    let weeklyWeather = null
+    const lat = req.body.latitude
+    const lon = req.body.longitude
+    const api_url = `https://api.darksky.net/forecast/04295c26f975c0c262814a6578aea547/${lat},${lon}?extend=hourly`
+    axios.get(api_url)
+        .then(response => {
+            console.log(response)
+            // weeklyWeather = response.daily.data
+            // weather = JSON.stringify(response)
+        })
+        .catch(err => {
+            console.log(err)
+        });
 
     User.findById(req.user._id, (err, obj) => {
         if (err) { console.log(err); }
@@ -315,7 +332,7 @@ function checkNotAuthenticated(req, res, next)  {
 
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 3000;
+  port = 3001;
 }
 
 app.listen(port, function() {

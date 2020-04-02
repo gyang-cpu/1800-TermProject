@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/edgarcoime/1800-TermProject#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
