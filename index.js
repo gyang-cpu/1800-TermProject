@@ -230,13 +230,15 @@ app.post('/addReminder', checkAuthenticated, (req, res) => {
 app.post('/export', checkAuthenticated, (req, res) => {
     // console.log(req.body)
     // console.log(req.user._id)
-    let listId = req.body.listId
+    let listId = req.body.listId;
+    let listName = req.body.listName;
     User.findById(req.user._id, (err, obj) => {
         if (err) { console.log(err); }
         else {
             console.log(obj.lists.id(listId))
         }
     })
+    res.redirect(`/lists/${listName}/${listId}`)
 })
 
 
