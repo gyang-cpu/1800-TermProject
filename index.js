@@ -181,10 +181,10 @@ app.post('/deleteReminder', checkAuthenticated, (req, res) => {
             obj.lists.id(listId).items.id(reminderId).remove();
             obj.save(err => {
                 if (err) { console.log(err); }
+                res.redirect(`/lists/${listName}/${listId}`)
             })
         }
     })
-    res.redirect(`/lists/${listName}/${listId}`)
 })
 
 app.post('/umbrellaReminder', checkAuthenticated, (req, res) => {
@@ -237,10 +237,10 @@ app.post('/addReminder', checkAuthenticated, (req, res) => {
             })
             obj.save(err => {
                 if (err) { console.log(err); }
+                res.redirect(`/lists/${listName}/${listId}`)
             })
         }
     })
-    res.redirect(`/lists/${listName}/${listId}`)
     console.log(req.body)
 })
 
