@@ -18,5 +18,4 @@ https://trello.com/b/Uk4LE91r/bcit-comp1800-term-project
 Design and implement a remainder website.
 
 ## Acknowledgements:
-Pre-styling Template:
-Bootstrap 4 Todo task list with badges snippet is created by BBBootstrap Team using Bootstrap 4.3.1, Javascript 3.2.1.
+Template: Bootstrap 4 Todo task list with badges snippet is created by BBBootstrap Team using Bootstrap 4.3.1, Javascript 3.2.1.
