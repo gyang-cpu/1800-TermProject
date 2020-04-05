@@ -1,8 +1,6 @@
-# MEMENTO - A Simple To-Do List
+# MEMENTO - A To-Do List
 
-# Team 5
-
-## Team roles:
+## Team 5 Roles:
 
 Project Manager: Daniel
 
