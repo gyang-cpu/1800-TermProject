@@ -13,8 +13,10 @@ Back-End Developer: George
 ## Trello Board:
 https://trello.com/b/Uk4LE91r/bcit-comp1800-term-project
 
-## Long Term Goal:
+## Goal:
 
 Design and implement a remainder website.
 
-## Short Term Goal:
+## Acknowledgements:
+Pre-styling Template:
+Bootstrap 4 Todo task list with badges snippet is created by BBBootstrap Team using Bootstrap 4.3.1, Javascript 3.2.1.
