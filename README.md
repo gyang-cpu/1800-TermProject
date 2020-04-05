@@ -1,3 +1,5 @@
+# MEMENTO - A Simple To-Do List
+
 # Team 5
 
 ## Team roles:
