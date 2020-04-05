@@ -1,9 +1,9 @@
-##Bootstrap:
+## Bootstrap:
 The MIT License (MIT)
 Copyright (c) 2011-2018 Twitter, Inc.
 Copyright (c) 2011-2018 The Bootstrap Authors
 
-##Fontawesome:
+## Fontawesome:
 Icons — CC BY 4.0 License
 In the Font Awesome Free download, the CC BY 4.0 license applies to all icons packaged as .svg and .js files types.
 
@@ -14,7 +14,7 @@ Code — MIT License
 In the Font Awesome Free download, the MIT license applies to all non-font and non-icon files.
 
 
-##1800-TermProject - MEMENTO 
+## 1800-TermProject - MEMENTO 
 
 MIT License
 
