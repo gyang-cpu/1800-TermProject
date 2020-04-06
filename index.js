@@ -3,6 +3,7 @@ const express = require('express'),
     mongoose = require('mongoose'),
     // User = require("./models/user"),
     passport = require("passport"),
+    fs = require("fs"),
     LocalStrategy = require("passport-local"),
     passportMongoose = require("passport-local-mongoose"),
     axios = require('axios').default;
@@ -18,8 +19,8 @@ const mongooseUsername = "edgar-admin"
 const mongoosePassword = "test1234"
 mongoose.connect(`mongodb+srv://${mongooseUsername}:${mongoosePassword}@cluster0-sftgr.mongodb.net/todolistDB`,
     { useNewUrlParser: true, useUnifiedTopology: true })
-// mongoose.connect("mongodb://localhost:27017/1800todolist", 
-// {useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false})
+mongoose.connect("mongodb://localhost:27017/1800todolist", 
+{useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false})
 
 // MONGOOSE SCHEMAS
 
@@ -252,10 +253,20 @@ app.post('/export', checkAuthenticated, (req, res) => {
     User.findById(req.user._id, (err, obj) => {
         if (err) { console.log(err); }
         else {
-            console.log(obj.lists.id(listId))
+            data = JSON.stringify(obj.lists.id(listId))
+            console.log(data)
+            fs.writeFile("./models/userInfo.txt", data, function (err, data){
+                if(err){
+                console.log(err)}
+                else{
+                    file = `${__dirname}/models/userInfo.txt`;
+                    res.download(file);
+                }
+            });
+
         }
     })
-    res.redirect(`/lists/${listName}/${listId}`)
+
 })
 
 
