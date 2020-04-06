@@ -5,7 +5,8 @@ const express = require('express'),
     passport = require("passport"),
     LocalStrategy = require("passport-local"),
     passportMongoose = require("passport-local-mongoose"),
-    axios = require('axios').default;
+    axios = require('axios').default,
+    _ = require('lodash');
 
 
 const app = express()
@@ -108,9 +109,11 @@ passport.deserializeUser(User.deserializeUser());
 // List of Reminder LISTS ================================================
 app.get("/", checkAuthenticated, function (req, res) {
     // console.log(req.user.lists)
+    let capitalizedUsername = _.capitalize(req.user.username)
     res.render("secret", {
         newListItems: req.user.lists,
-        user: req.user
+        user: req.user,
+        capitalizedUsername: capitalizedUsername
     });
     // res.render('reminders')
 });
@@ -153,6 +156,7 @@ app.get('/lists/:customListName/:listId', checkAuthenticated, (req, res) => {
     const allUserLists = req.user.lists
     const customListName = req.params.customListName
     const listId = req.params.listId
+    let capitalizedUsername = _.capitalize(req.user.username)
 
     // Is there a better way to store list Id than putting it in params?
     const currentList = allUserLists.find(element => element._id == listId)
@@ -161,7 +165,8 @@ app.get('/lists/:customListName/:listId', checkAuthenticated, (req, res) => {
         listName: customListName,
         newListItems: currentList.items,
         user: req.user,
-        listId: listId
+        listId: listId,
+        capitalizedUsername: capitalizedUsername
     });
 })
 
