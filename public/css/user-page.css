@@ -27,7 +27,11 @@ svg{
 }
 
 #sun{
-  width:15px;
+  width:17px;
+}
+
+#edit{
+  width:20px;
 }
 
 .container {

@@ -24,12 +24,6 @@
 
 <div class="row d-flex justify-content-center container">
   <div class="col-md-8">
-      <h2>Hello, <%= user.username %>!</h2>
-            <!-- Search form -->
-              <div class="active-pink-3 active-pink-4 mb-4">
-                <input class="form-control" type="text" placeholder="Search through reminders" aria-label="Search">
-              </div>
-
       <div class="card-hover-shadow-2x mb-3 card">
           <div class="card-header-tab card-header">
               <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
@@ -56,7 +50,7 @@
                                                     class="btn btn-info btn-sm"
                                                     name="reminderId"
                                                     value="<%= item._id %>">
-                                                    Edit
+                                                    <svg id="edit" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-circle-left" class="svg-inline--fa fa-chevron-circle-left fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zM142.1 273l135.5 135.5c9.4 9.4 24.6 9.4 33.9 0l17-17c9.4-9.4 9.4-24.6 0-33.9L226.9 256l101.6-101.6c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L142.1 239c-9.4 9.4-9.4 24.6 0 34z"></path></svg>
                                                     </button>
 
                                                   </form>
