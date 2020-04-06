@@ -8,7 +8,7 @@ body{
   height: 100%; 
 }
 
-h2 {
+h2, h3, h4 {
   text-align: center;
 
 }
@@ -34,8 +34,13 @@ svg{
   width:20px;
 }
 
-.container {
+/* .container {
   margin-top: 100px
+} */
+
+.container {
+  margin: auto;
+  margin-top: calc(150px + 5vh);
 }
 
 .card {
