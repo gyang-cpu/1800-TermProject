@@ -245,13 +245,14 @@ app.post('/addReminder', checkAuthenticated, (req, res) => {
 })
 
 app.post('/export', checkAuthenticated, (req, res) => {
-    // console.log(req.body)
-    // console.log(req.user._id)
     let listId = req.body.listId;
     let listName = req.body.listName;
+    let kebabListName = _.kebabCase(listName)
+    let json = ""
     User.findById(req.user._id, (err, obj) => {
         if (err) { console.log(err); }
         else {
+<<<<<<< HEAD
             data = JSON.stringify(obj.lists.id(listId))
             console.log(data)
             fs.writeFile("./models/userInfo.txt", data, function (err, data){
@@ -266,6 +267,14 @@ app.post('/export', checkAuthenticated, (req, res) => {
         }
     })
 
+=======
+            
+            json = JSON.stringify(obj.lists.id(listId).items)
+            res.set({"Content-Disposition" : `attachment; filename=\"${kebabListName}.txt\"`});
+            res.send(json);
+        }
+    })
+>>>>>>> 746b5e1ab299748ac5d024aad241ac83d408d850
 })
 
 
