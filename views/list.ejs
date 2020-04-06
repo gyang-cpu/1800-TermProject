@@ -24,11 +24,17 @@
 
 <div class="row d-flex justify-content-center container">
   <div class="col-md-8">
+    <h2><%= capitalizedUsername %>'s list called:</h2>
+    <h4>"<%= listName %>"</h4>
+    <!-- Search form -->
+      <div class="active-pink-3 active-pink-4 mb-4">
+        <input class="form-control" type="text" placeholder="Search through reminders" aria-label="Search">
+      </div>
       <div class="card-hover-shadow-2x mb-3 card">
           <div class="card-header-tab card-header">
               <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
                 <i class="fa fa-tasks"></i>&nbsp;
-                <%= user.username %>: <%= listName %> 
+                Reminder
               </div>
           </div>
           <div class="scroll-area-sm">

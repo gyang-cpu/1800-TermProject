@@ -23,7 +23,11 @@
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
+<<<<<<< HEAD
     "fs": "0.0.1-security",
+=======
+    "lodash": "^4.17.15",
+>>>>>>> c6974e4ed05185b952bfc3e2df6f633b30536df4
     "mongoose": "^5.9.6",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
