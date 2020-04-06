@@ -6,7 +6,11 @@ body{
   color: #499491;
   margin: 0;
   height: 100%; 
-  overflow: hidden;
+}
+
+h2 {
+  text-align: center;
+
 }
 
 i {
