@@ -6,8 +6,13 @@ body{
   color: #499491;
   margin: 0;
   height: 100%; 
-  overflow: hidden;
 }
+
+h2 {
+  text-align: center;
+
+}
+
 i {
   font-style: italic
 }
@@ -21,9 +26,16 @@ svg{
   width: 60px;
 }
 
+#sun{
+  width:17px;
+}
+
+#edit{
+  width:20px;
+}
+
 .container {
-  margin: auto;
-  margin-top: calc(150px + 5vh);
+  margin-top: 100px
 }
 
 .card {
@@ -177,4 +189,23 @@ svg{
 
 .card-footer {
   background-color: #fff
+}
+
+.row {
+  margin-top: 0.5% !important;
+}
+
+#sun {
+ width: 18px;
+}
+
+#generate-tag-button {
+  background-color: #ff4242;
+  border-color: #ff4242;
+  margin-top: 10px;
+}
+
+#export-button {
+  background-color: #9e9e9e;
+  border-color: #9e9e9e;
 }
