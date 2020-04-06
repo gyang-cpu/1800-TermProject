@@ -144,6 +144,8 @@ app.post('/delete', checkAuthenticated, (req, res) => {
     res.redirect('/')
 })
 
+// Weather consts
+isRaining = "fa fa-umbrella"; 
 
 // Reminder List ==================================================================================
 
@@ -219,9 +221,28 @@ app.post('/addReminder', checkAuthenticated, (req, res) => {
     const api_url = `https://api.darksky.net/forecast/04295c26f975c0c262814a6578aea547/${lat},${lon}?extend=hourly`
     axios.get(api_url)
         .then(response => {
+            let weeklyWeather = response;
+            currentWeather = response.data.currently.icon;
+
             console.log(response)
-            // weeklyWeather = response.daily.data
-            // weather = JSON.stringify(response)
+            console.log(typeof(response) + " is the type of response");
+            currentTime = response.data.currently.time;
+            console.log(response.data.currently.time + 'the time is currently')
+            console.log(typeof(currentWeather) + 'type weather is stored as');
+            console.log(typeof(currentTime) + 'the time is stored as type');
+            
+            if (currentWeather.includes('rain')) {
+                console.log('it is currently raining');
+                isRaining = "fa fa-umbrellasssss"
+                console.log(isRaining);
+            } else {
+                console.log('not raining at all');
+                isRaining = "fa fa-sun-o"; 
+                console.log(isRaining);
+            }
+
+            
+            
         })
         .catch(err => {
             console.log(err)
