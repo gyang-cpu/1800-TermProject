@@ -22,6 +22,10 @@ svg{
   width: 60px;
 }
 
+#sun{
+  width:15px;
+}
+
 .container {
   margin-top: 100px
 }
