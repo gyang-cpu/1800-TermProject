@@ -22,8 +22,8 @@ svg{
 }
 
 .container {
-  margin-top: 100px;
   margin: auto;
+  margin-top: calc(150px + 5vh);
 }
 
 .card {
