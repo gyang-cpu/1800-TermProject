@@ -37,13 +37,7 @@ const listReminderSchema = new mongoose.Schema({
     title           : String,
     date            : Date,
     details         : String,
-    weather         : {
-        type        : weatherSchema,
-        "default"   : {
-            country : "Richmond",
-            temp    : 45
-        }
-    }
+    weather         : weatherSchema
 });
 
 const listSchema = new mongoose.Schema({
