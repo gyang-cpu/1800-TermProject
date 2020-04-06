@@ -8,6 +8,10 @@ body{
   height: 100%; 
 }
 
+nav {
+  background: #F7FED8;
+}
+
 h2 {
   text-align: center;
 
