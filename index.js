@@ -244,17 +244,19 @@ app.post('/addReminder', checkAuthenticated, (req, res) => {
 })
 
 app.post('/export', checkAuthenticated, (req, res) => {
-    // console.log(req.body)
-    // console.log(req.user._id)
     let listId = req.body.listId;
     let listName = req.body.listName;
+    let kebabListName = _.kebabCase(listName)
+    let json = ""
     User.findById(req.user._id, (err, obj) => {
         if (err) { console.log(err); }
         else {
-            console.log(obj.lists.id(listId))
+            
+            json = JSON.stringify(obj.lists.id(listId).items)
+            res.set({"Content-Disposition" : `attachment; filename=\"${kebabListName}.txt\"`});
+            res.send(json);
         }
     })
-    res.redirect(`/lists/${listName}/${listId}`)
 })
 
 
